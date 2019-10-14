@@ -9,40 +9,47 @@ text = ["txt", "pdf"]
 extensions = [{"C:/Users/basse/Pictures/downloads": fotos},
               {"C:/Users/basse/Documents/downloads": text}]
 skip = ["ini", "part"]
-downloads = os.listdir("C:/Users/basse/Downloads")
+downloads = None
 
 
 def sorting():
+    print("0")
     for d_file in downloads:
+        print("1")
+        value = None
+        src = None
+        dst = None
         file_extension = d_file.split(".")[-1]
         for i in extensions:
-            for j in i:
-                if file_extension in skip:
-                    print(f"bestand: {d_file} skipt")
-                    continue
-                elif d_file + ".part" in downloads:
-                    print(
-                        f"bestand: {d_file} heeft nog een .part file")
-                    continue
-                elif file_extension in i[j]:
-                    print(f"bestand: {d_file} gaat naar {j}/{d_file}")
-                    shutil.move(f"{path}/{d_file}", f"{j}/{d_file}")
-                else:
-                    print(f"bestand: {d_file} gaat naar onbekend")
-                    shutil.move(f"{path}/{d_file}",
-                                f"D:/unknown _downloads/{d_file}")
-
-        # while True:
-        #     mylist = os.listdir("C:/Users/basse/Downloads")
-        #     time.sleep(1)
-        #     if "desktop.ini" in mylist:
-        #         if len(mylist) >= 2:
-        #             print(mylist)
-        #             sorting()
-        #     else:
-        #         if len(mylist) >= 1:
-        #             print(mylist)
-        #             sorting()
+            print("2")
+            if file_extension in skip:
+                value = f"bestand: {d_file} skipt"
+            elif d_file + ".part" in downloads:
+                value = f"bestand: {d_file} heeft nog een .part file"
+            else:
+                for j in i:
+                    print("3")
+                    if file_extension in i[j]:
+                        src = f"{path}/{d_file}"
+                        dst = f"{j}/{d_file}"
+            if not value and not src:
+                src = f"{path}/{d_file}"
+                dst = f"D:/unknown_downloads/{d_file}"
+        if value:
+            print(value)
+        else:
+            shutil.move(src, dst)
 
 
-sorting()
+while True:
+    downloads = os.listdir("C:/Users/basse/Downloads")
+    mylist = os.listdir("C:/Users/basse/Downloads")
+    time.sleep(1)
+    if "desktop.ini" in mylist:
+        if len(mylist) >= 2:
+            print(mylist)
+            sorting()
+    else:
+        if len(mylist) >= 1:
+            print(mylist)
+            sorting()
