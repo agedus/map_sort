@@ -5,7 +5,7 @@ from tkinter import filedialog
 config = configparser.ConfigParser()
 config.read('settings.ini')
 
-
+# FIXME make 1 function for all types
 # Select a directory to be sorted
 
 
@@ -59,7 +59,7 @@ button_img.grid(row=1, column=3)
 # txt
 main_l_txt = Label(master=root, textvariable=folder_path_txt)
 main_l_txt.grid(row=2, column=1)
-button_txt = Button(text="Select directory text", command=browse_button_img)
+button_txt = Button(text="Select directory text", command=browse_button_txt)
 button_txt.grid(row=2, column=3)
 
 
