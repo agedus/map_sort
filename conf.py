@@ -6,44 +6,61 @@ config = configparser.ConfigParser()
 config.read('settings.ini')
 
 
-#Select a directory to be sorted#
+# Select a directory to be sorted
 
 
 def browse_button_sort():
-    global folder_path_sort
+    global folder_path_srt
     filename = filedialog.askdirectory()
     if filename:
-        config['PATHS']['sort_directory'] = filename
-    folder_path_sort.set(config['PATHS']['sort_directory'])
+        config['SORT'][''] = filename
+    folder_path_srt.set(config['SORT']['path'])
 
-#Select a directory to put image files in and what extensions#
+# Select a directory to put image files in and what extensions
 
 
 def browse_button_img():
     global folder_path_img
     filename = filedialog.askdirectory()
     if filename:
-        config['PATHS']['img_directory'] = filename
-    folder_path_img.set(config['PATHS']['img_directory'])
+        config['IMAGES']['path'] = filename
+    folder_path_img.set(config['IMAGES']['path'])
+
+# Select a directory to put text files in and what extensions
+
+
+def browse_button_txt():
+    global folder_path_txt
+    filename = filedialog.askdirectory()
+    if filename:
+        config['TEXT']['path'] = filename
+    folder_path_txt.set(config['TEXT']['path'])
 
 
 #GUI#
 
 root = Tk()
-folder_path_sort = StringVar()
+folder_path_srt = StringVar()
 folder_path_img = StringVar()
-folder_path_sort.set(config['PATHS']['sort_directory'])
-folder_path_img.set(config['PATHS']['img_directory'])
-# sort
-main_l_sort = Label(master=root, textvariable=folder_path_sort)
-main_l_sort.grid(row=0, column=1)
-button_sort = Button(text="Select directory", command=browse_button_sort)
-button_sort.grid(row=0, column=3)
+folder_path_txt = StringVar()
+folder_path_srt.set(config['SORT']['path'])
+folder_path_img.set(config['IMAGES']['path'])
+folder_path_txt.set(config['TEXT']['path'])
+# srt
+main_l_srt = Label(master=root, textvariable=folder_path_srt)
+main_l_srt.grid(row=0, column=1)
+button_srt = Button(text="Select directory sort", command=browse_button_sort)
+button_srt.grid(row=0, column=3)
 # img
 main_l_img = Label(master=root, textvariable=folder_path_img)
 main_l_img.grid(row=1, column=1)
-button_img = Button(text="Select directory", command=browse_button_img)
+button_img = Button(text="Select directory foto", command=browse_button_img)
 button_img.grid(row=1, column=3)
+# txt
+main_l_txt = Label(master=root, textvariable=folder_path_txt)
+main_l_txt.grid(row=2, column=1)
+button_txt = Button(text="Select directory text", command=browse_button_img)
+button_txt.grid(row=2, column=3)
 
 
 mainloop()
