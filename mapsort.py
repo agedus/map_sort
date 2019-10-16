@@ -1,13 +1,17 @@
 import os
 import time
 import shutil
+import configparser
 
+config = configparser.ConfigParser()
+config.read('settings.ini')
 
+# TODO make folders folders from .ini file
 path = "C:/Users/basse/Downloads"
-fotos = ["jpeg", "jpg", "png"]
-text = ["txt", "pdf"]
-extensions = [{"C:/Users/basse/Pictures/downloads": fotos},
-              {"C:/Users/basse/Documents/downloads": text}]
+# TODO add al etensions to var extensions
+extensions = [{config['IMAGES']['path']: config.get(
+    'IMAGES', 'extensions').split(',')}]
+print(extensions[0].keys)
 skip = ["ini", "part"]
 downloads = None
 
