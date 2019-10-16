@@ -61,6 +61,7 @@ main_l_txt = Label(master=root, textvariable=folder_path_txt)
 main_l_txt.grid(row=2, column=1)
 button_txt = Button(text="Select directory text", command=browse_button_txt)
 button_txt.grid(row=2, column=3)
+# TODO add al extension types
 
 
 mainloop()
