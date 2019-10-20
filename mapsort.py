@@ -6,11 +6,12 @@ import configparser
 config = configparser.ConfigParser()
 config.read('settings.ini')
 
-# TODO make folders folders from .ini file
+# TODO make folders from .ini file
 path = "C:/Users/basse/Downloads"
 # TODO add al etensions to var extensions
 extensions = [{config['IMAGES']['path']: config.get(
-    'IMAGES', 'extensions').split(',')}]
+    'IMAGES', 'extensions').split(',')}, {config['TEXT']['path']: config.get(
+        'TEXT', 'extensions').split(',')}]
 print(extensions[0].keys)
 skip = ["ini", "part"]
 downloads = None
