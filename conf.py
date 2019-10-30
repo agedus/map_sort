@@ -84,6 +84,7 @@ def commit_button_txt():
 
 
 def add_sort():
+    print("test")
     new_directory = entry_add.get()
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
