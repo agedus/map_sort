@@ -36,6 +36,7 @@ def browse_button_img():
 
 def push_button_img(event):
     extension = entry_img.get()
+    extension = extension.replace(".", "")
     if extension not in extension_array_img:
         extension_array_img.append(extension)
     entry_img.delete(0, 'end')
@@ -64,6 +65,7 @@ def browse_button_txt():
 
 def push_button_txt(event):
     extension = entry_txt.get()
+    extension = extension.replace(".", "")
     if extension not in extension_array_txt:
         extension_array_txt.append(extension)
     entry_txt.delete(0, 'end')
@@ -78,6 +80,27 @@ def commit_button_txt():
     if push_extensions:
         config['TEXT']['extensions'] = push_extensions
     extensions_txt.set(config['TEXT']['extensions'])
+################################################################
+
+
+def add_sort():
+    new_directory = entry_add.get()
+    if not config.has_section('SORT_DIRECTORY'):
+        config.add_section('SORT_DIRECTORY')
+        config['SORT_DIRECTORY']['directorys'] = new_directory
+    else:
+        directorys = config['SORT_DIRECTORY']['directorys'].split(",")
+        if entry_add.get():
+            directorys.append(new_directory)
+            push_dirs = ""
+            for dirs in directorys:
+                dirs = dirs.replace(" ", "")
+                push_dirs += dirs + ","
+            push_dirs = push_dirs[:-1]
+            if push_dirs.startswith(","):
+                push_dirs = push_dirs[1:]
+            config['SORT_DIRECTORY']['directorys'] = push_dirs
+    entry_add.delete(0, 'end')
 
 
 #GUI#
@@ -131,6 +154,12 @@ button_txt_entry.grid(row=5, column=3)
 main_l_txt = Label(root, textvariable=extensions_txt)
 main_l_txt.grid(row=5, column=5)
 # TODO add al extension types
+
+
+button_add_sort = Button(root, command=add_sort, text="+")
+button_add_sort.grid(row=10, column=1)
+entry_add = Entry(root)
+entry_add.grid(row=10, column=3)
 
 
 mainloop()
