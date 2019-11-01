@@ -7,9 +7,10 @@ config.read('settings.ini')
 
 root = Tk()
 
-extension_array_img = []
-extension_array_txt = []
-
+label_check = False
+l_block = None
+# extension_array_img = []
+# extension_array_txt = []
 
 # FIXME make 1 function for all types
 # Select a directory to be sorted
@@ -99,6 +100,7 @@ def section_check():
                 config.add_section(sort_dir.upper())
                 config[sort_dir.upper()]['path_sort'] = "None"
                 config[sort_dir.upper()]['path_place'] = "None"
+                config[sort_dir.upper()]['extensions'] = "None"
 
 
 # add a new directory to sort
@@ -125,11 +127,8 @@ def add_sort():
     entry_add.delete(0, 'end')
     section_check()
     write()
+    blocks()
 
-
-if config.has_section('SORT_DIRECTORY'):
-    section_check()
-    write()
 
 #GUI#
 
@@ -137,67 +136,36 @@ if config.has_section('SORT_DIRECTORY'):
 
 
 def blocks():
+    global label_check, l_block
+    if label_check:
+        l_block.destroy()
+    l_block = Label(root)
+    row = 3
     for sort_dir in config['SORT_DIRECTORY']['directorys'].split(","):
-        pass
+        row += 1
+        l_section = Label(l_block, text=sort_dir.upper())
+        l_section.grid(column=1, row=row)
+        e_section = Entry(l_block)
+        e_section.grid(column=2, row=row)
+        l_text = Label(l_block, text="Sorting directory:")
+        l_text.grid(column=3, row=row)
+    l_block.grid()
+    label_check = True
 
-
-################################################################
-# # TODO make one layout to use multiple times
-# folder_path_srt = StringVar()
-# folder_path_img = StringVar()
-# folder_path_txt = StringVar()
-# extensions_img = StringVar()
-# extensions_txt = StringVar()
-# folder_path_srt.set(config['SORT']['path'])
-# folder_path_img.set(config['IMAGES']['path'])
-# folder_path_txt.set(config['TEXT']['path'])
-# extensions_img.set(config['IMAGES']['extensions'])
-# extensions_txt.set(config['TEXT']['extensions'])
-
-# # srt
-# main_l_srt = Label(root, textvariable=folder_path_srt)
-# main_l_srt.grid(row=0, column=1)
-# button_srt = Button(root, text="Select directory sort",
-#                     command=browse_button_sort)
-# button_srt.grid(row=0, column=3)
-
-# # img
-# main_l_img = Label(root, textvariable=folder_path_img)
-# main_l_img.grid(row=1, column=1)
-# button_img = Button(root, text="Select directory foto",
-#                     command=browse_button_img)
-# button_img.grid(row=1, column=3)
-# entry_img = Entry(root)
-# entry_img.grid(row=4, column=1)
-# entry_img.bind('<Return>', push_button_img)
-# button_img_entry = Button(
-#     root, text="commit exetension foto", command=commit_button_img)
-# button_img_entry.grid(row=4, column=3)
-# main_l_img = Label(root, textvariable=extensions_img)
-# main_l_img.grid(row=4, column=5)
-
-
-# # txt
-# main_l_txt = Label(root, textvariable=folder_path_txt)
-# main_l_txt.grid(row=2, column=1)
-# button_txt = Button(root, text="Select directory text",
-#                     command=browse_button_txt)
-# button_txt.grid(row=2, column=3)
-# entry_txt = Entry(root)
-# entry_txt.grid(row=5, column=1)
-# entry_txt.bind('<Return>', push_button_txt)
-# button_txt_entry = Button(root, text="commit exetension text",
-#                           command=commit_button_txt)
-# button_txt_entry.grid(row=5, column=3)
-# main_l_txt = Label(root, textvariable=extensions_txt)
-# main_l_txt.grid(row=5, column=5)
-# # TODO add al extension types
+# make a directory
 
 
 button_add_sort = Button(root, command=add_sort, text="+")
-button_add_sort.grid(row=10, column=1)
+button_add_sort.grid()
 entry_add = Entry(root)
-entry_add.grid(row=10, column=3)
+entry_add.grid()
 
+#startup#
+
+
+if config.has_section('SORT_DIRECTORY'):
+    section_check()
+    write()
+    blocks()
 
 mainloop()
