@@ -9,30 +9,11 @@ root = Tk()
 
 label_check = False
 l_block = None
-# extension_array_img = []
-# extension_array_txt = []
+collumn_count = 0
+e_extension = ""
 
-# FIXME make 1 function for all types
-# Select a directory to be sorted
-
-
-# def browse_button_sort():
-#     global folder_path_srt
-#     filename = filedialog.askdirectory()
-#     if filename:
-#         config['SORT']['path'] = filename
-#     folder_path_srt.set(config['SORT']['path'])
-
-
-# # Select a directory to put image files in and what extensions and commit the exentesions to filter
-
-
-# def browse_button_img():
-#     global folder_path_img
-#     filename = filedialog.askdirectory()
-#     if filename:
-#         config['IMAGES']['path'] = filename
-#     folder_path_img.set(config['IMAGES']['path'])
+extension_array_img = []
+extension_array_txt = []
 
 
 # def push_button_img(event):
@@ -53,37 +34,11 @@ l_block = None
 #         config['IMAGES']['extensions'] = push_extensions
 #     extensions_img.set(config['IMAGES']['extensions'])
 
-# # Select a directory to put text files in and what extensions and commit the exentesions to filter
-
-
-# def browse_button_txt():
-#     global folder_path_txt
-#     filename = filedialog.askdirectory()
-#     if filename:
-#         config['TEXT']['path'] = filename
-#     folder_path_txt.set(config['TEXT']['path'])
-
-
-# def push_button_txt(event):
-#     extension = entry_txt.get()
-#     extension = extension.replace(".", "")
-#     if extension not in extension_array_txt:
-#         extension_array_txt.append(extension)
-#     entry_txt.delete(0, 'end')
-
-
-# def commit_button_txt():
-#     push_extensions = ""
-#     for extension in extension_array_txt:
-#         extension = extension.replace(" ", "")
-#         push_extensions += extension + ","
-#     push_extensions = push_extensions[:-1]
-#     if push_extensions:
-#         config['TEXT']['extensions'] = push_extensions
-#     extensions_txt.set(config['TEXT']['extensions'])
 ################################################################
 
-#write the code in settings.ini file#
+#backend#
+
+# write the code in settings.ini file
 
 
 def write():
@@ -102,12 +57,11 @@ def section_check():
                 config[sort_dir.upper()]['path_place'] = "None"
                 config[sort_dir.upper()]['extensions'] = "None"
 
-
 # add a new directory to sort
 
 
 def add_sort():
-    new_directory = entry_add.get().lower()
+    new_directory = entry_add.get().lower().replace(" ", "")
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
         config['SORT_DIRECTORY']['directorys'] = new_directory.lower()
@@ -129,26 +83,78 @@ def add_sort():
     write()
     blocks()
 
+# update the sorting en placing directory
+
+
+def path(type_directory, directory):
+    filename = filedialog.askdirectory()
+    if filename:
+        config[directory][type_directory] = filename
+        write()
+        blocks()
+
+
+def extensions(extension, directory):
+    extension = extension.replace(".", "")
+    if extension not in config[directory]['extensions'].split(","):
+        if config[directory]['extensions'].startswith("None"):
+            config[directory]['extensions'] = extension
+        else:
+            new_extension = config[directory]['extensions'] + "," + extension
+            config[directory]['extensions'] = new_extension
+        write()
+        blocks()
+    e_extension.delete(0, 'end')
+
 
 #GUI#
 
 # make the layout for every directory you made to sort
+def count_col():
+    global collumn_count
+    collumn_count += 1
+    return collumn_count
 
 
 def blocks():
-    global label_check, l_block
+    global label_check, l_block, collumn_count, e_extension
     if label_check:
         l_block.destroy()
     l_block = Label(root)
     row = 3
     for sort_dir in config['SORT_DIRECTORY']['directorys'].split(","):
-        row += 1
-        l_section = Label(l_block, text=sort_dir.upper())
-        l_section.grid(column=1, row=row)
-        e_section = Entry(l_block)
-        e_section.grid(column=2, row=row)
-        l_text = Label(l_block, text="Sorting directory:")
-        l_text.grid(column=3, row=row)
+        if sort_dir:
+            row += 1
+            l_section = Label(l_block, text=sort_dir.upper())
+            l_text_extensions = Label(
+                l_block, text="The extesions it filters:")
+            l_extensions = Label(
+                l_block, text=config[sort_dir.upper()]['extensions'])
+            l_text_entry = Label(l_block, text="Extension to filter:")
+            e_extension = Entry(l_block, textvariable=e_extension)
+            b_entry = Button(
+                l_block, command=lambda sort_dir=sort_dir, e_extension=e_extension: extensions(e_extension.get().lower(), sort_dir.upper()), text="Add extension")
+            b_sorting = Button(
+                l_block, command=lambda sort_dir=sort_dir: path("path_sort", sort_dir.upper()), text="Select sorting directory:")
+            b_placing = Button(
+                l_block, command=lambda sort_dir=sort_dir: path("path_place", sort_dir.upper()), text="Select placing directory:")
+            l_path_sort = Label(
+                l_block, text=config[sort_dir.upper()]['path_sort'])
+            l_path_place = Label(
+                l_block, text=config[sort_dir.upper()]['path_place'])
+            # packing
+            l_section.grid(column=count_col(), row=row)
+            l_text_extensions.grid(column=count_col(), row=row)
+            l_extensions.grid(column=count_col(), row=row)
+            l_text_entry.grid(column=count_col(), row=row)
+            e_extension.grid(column=count_col(), row=row)
+            b_entry.grid(column=count_col(), row=row)
+            b_sorting.grid(column=count_col(), row=row)
+            l_path_sort.grid(column=count_col(), row=row)
+            b_placing.grid(column=count_col(), row=row)
+            l_path_place.grid(column=count_col(), row=row)
+            collumn_count = 0
+    # end for loop
     l_block.grid()
     label_check = True
 
