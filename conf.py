@@ -6,35 +6,14 @@ config = configparser.ConfigParser()
 config.read('settings.ini')
 
 root = Tk()
+root.geometry("1500x500")
 
 label_check = False
+label_check_edit = False
 l_block = None
+l_edit_block = None
 collumn_count = 0
 e_extension = ""
-
-extension_array_img = []
-extension_array_txt = []
-
-
-# def push_button_img(event):
-#     extension = entry_img.get()
-#     extension = extension.replace(".", "")
-#     if extension not in extension_array_img:
-#         extension_array_img.append(extension)
-#     entry_img.delete(0, 'end')
-
-
-# def commit_button_img():
-#     push_extensions = ""
-#     for extension in extension_array_img:
-#         extension = extension.replace(" ", "")
-#         push_extensions += extension + ","
-#     push_extensions = push_extensions[:-1]
-#     if push_extensions:
-#         config['IMAGES']['extensions'] = push_extensions
-#     extensions_img.set(config['IMAGES']['extensions'])
-
-################################################################
 
 #backend#
 
@@ -61,6 +40,7 @@ def section_check():
 
 
 def add_sort():
+    l_edit_block.destroy()
     new_directory = entry_add.get().lower().replace(" ", "")
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
@@ -93,23 +73,61 @@ def path(type_directory, directory):
         write()
         blocks()
 
+# push extensions to settings.ini
+
 
 def extensions(extension, directory):
     extension = extension.replace(".", "")
-    if extension not in config[directory]['extensions'].split(","):
-        if config[directory]['extensions'].startswith("None"):
-            config[directory]['extensions'] = extension
-        else:
-            new_extension = config[directory]['extensions'] + "," + extension
-            config[directory]['extensions'] = new_extension
+    if extension:
+        if extension not in config[directory]['extensions'].split(","):
+            if config[directory]['extensions'].startswith("None"):
+                config[directory]['extensions'] = extension
+            else:
+                new_extension = config[directory]['extensions'] + \
+                    "," + extension
+                config[directory]['extensions'] = new_extension
+            write()
+            blocks()
+        e_extension.delete(0, 'end')
+
+# delete a directory
+
+
+def delete(directory):
+    push_dirs = ""
+    directorys = config['SORT_DIRECTORY']['directorys'].split(",")
+    if directory.lower() in directorys:
+        directorys.remove(directory.lower())
+        for dirs in directorys:
+            push_dirs += dirs + ","
+        push_dirs = push_dirs[:-1]
+        config['SORT_DIRECTORY']['directorys'] = push_dirs
+        config.remove_section(directory)
         write()
         blocks()
-    e_extension.delete(0, 'end')
+
+# delete extesnions
+
+
+def delete_extension(extension, directory):
+    exten_push = ""
+    extensions = config[directory]['extensions'].split(",")
+    extensions.remove(extension)
+    for exten in extensions:
+        exten_push += exten + ","
+    exten_push = exten_push[:-1]
+    if not exten_push:
+        exten_push = "None"
+    config[directory]['extensions'] = exten_push
+    write()
+    extension_edit(directory)
 
 
 #GUI#
 
 # make the layout for every directory you made to sort
+
+
 def count_col():
     global collumn_count
     collumn_count += 1
@@ -134,6 +152,8 @@ def blocks():
             e_extension = Entry(l_block, textvariable=e_extension)
             b_entry = Button(
                 l_block, command=lambda sort_dir=sort_dir, e_extension=e_extension: extensions(e_extension.get().lower(), sort_dir.upper()), text="Add extension")
+            b_extension_edit = Button(
+                l_block, command=lambda sort_dir=sort_dir: extension_edit(sort_dir.upper()), text="Edit extensions")
             b_sorting = Button(
                 l_block, command=lambda sort_dir=sort_dir: path("path_sort", sort_dir.upper()), text="Select sorting directory:")
             b_placing = Button(
@@ -142,6 +162,8 @@ def blocks():
                 l_block, text=config[sort_dir.upper()]['path_sort'])
             l_path_place = Label(
                 l_block, text=config[sort_dir.upper()]['path_place'])
+            b_delete = Button(
+                l_block, command=lambda sort_dir=sort_dir: delete(sort_dir.upper()), text="Delete this")
             # packing
             l_section.grid(column=count_col(), row=row)
             l_text_extensions.grid(column=count_col(), row=row)
@@ -149,14 +171,37 @@ def blocks():
             l_text_entry.grid(column=count_col(), row=row)
             e_extension.grid(column=count_col(), row=row)
             b_entry.grid(column=count_col(), row=row)
+            b_extension_edit.grid(column=count_col(), row=row)
             b_sorting.grid(column=count_col(), row=row)
             l_path_sort.grid(column=count_col(), row=row)
             b_placing.grid(column=count_col(), row=row)
             l_path_place.grid(column=count_col(), row=row)
+            b_delete.grid(column=count_col(), row=row)
             collumn_count = 0
     # end for loop
     l_block.grid()
     label_check = True
+
+
+def extension_edit(directory):
+    global l_edit_block, label_check_edit
+    blocks()
+
+    def close():
+        l_edit_block.destroy()
+    if label_check_edit:
+        l_edit_block.destroy()
+    l_edit_block = Label(root)
+    l_edit_block.grid()
+    if not config[directory]['extensions'] == "None":
+        for extension in config[directory]['extensions'].split(","):
+            b_delete_extension = Button(
+                l_edit_block, command=lambda extension=extension: delete_extension(extension, directory), text=f"Delete the {extension} extension")
+            b_delete_extension.grid()
+        b_close_edit = Button(
+            l_edit_block, command=close, text="Close")
+        b_close_edit.grid(sticky="e")
+    label_check_edit = True
 
 # make a directory
 
