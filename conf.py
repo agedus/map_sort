@@ -40,7 +40,6 @@ def section_check():
 
 
 def add_sort():
-    l_edit_block.destroy()
     new_directory = entry_add.get().lower().replace(" ", "")
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
