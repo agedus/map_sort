@@ -1,3 +1,4 @@
+import mapsort
 import configparser
 from tkinter import *
 from tkinter import filedialog
@@ -205,10 +206,12 @@ def extension_edit(directory):
 # make a directory
 
 
-button_add_sort = Button(root, command=add_sort, text="+")
-button_add_sort.grid()
-entry_add = Entry(root)
-entry_add.grid()
+b_add_sort = Button(root, command=add_sort, text="+")
+b_add_sort.grid()
+e_add = Entry(root)
+e_add.grid()
+b_run = Button(root, command=lambda: mapsort, text="Run")
+b_run.grid()
 
 #startup#
 
