@@ -1,5 +1,3 @@
-print("yaaa")
-
 # import os
 # import time
 # import shutil
