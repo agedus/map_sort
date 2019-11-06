@@ -41,13 +41,13 @@ def section_check():
 
 
 def add_sort():
-    new_directory = entry_add.get().lower().replace(" ", "")
+    new_directory = e_add.get().lower().replace(" ", "")
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
         config['SORT_DIRECTORY']['directorys'] = new_directory.lower()
     else:
         directorys = config['SORT_DIRECTORY']['directorys'].split(",")
-        if entry_add.get():
+        if e_add.get():
             if not new_directory in directorys:
                 directorys.append(new_directory)
                 push_dirs = ""
@@ -58,7 +58,7 @@ def add_sort():
                 if push_dirs.startswith(","):
                     push_dirs = push_dirs[1:]
                 config['SORT_DIRECTORY']['directorys'] = push_dirs
-    entry_add.delete(0, 'end')
+    e_add.delete(0, 'end')
     section_check()
     write()
     blocks()
