@@ -1,4 +1,3 @@
-import mapsort
 import configparser
 from tkinter import *
 from tkinter import filedialog
