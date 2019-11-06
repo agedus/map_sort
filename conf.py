@@ -209,8 +209,8 @@ b_add_sort = Button(root, command=add_sort, text="+")
 b_add_sort.grid()
 e_add = Entry(root)
 e_add.grid()
-b_run = Button(root, command=lambda: mapsort, text="Run")
-b_run.grid()
+# b_run = Button(root, command=lambda: mapsort, text="Run")
+# b_run.grid()
 
 #startup#
 
