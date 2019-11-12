@@ -6,7 +6,7 @@ config = configparser.ConfigParser()
 config.read('settings.ini')
 
 root = Tk()
-root.geometry("1500x500")
+root.maxsize()
 
 label_check = False
 label_check_edit = False
@@ -138,44 +138,74 @@ def blocks():
     if label_check:
         l_block.destroy()
     l_block = Label(root)
+    # titels
+    l_name_titel = Label(l_block, text="Name:")
+    l_extension_titel = Label(l_block, text="Extensions to filter:")
+    l_sort_titel = Label(l_block, text="Sorting directory:")
+    l_place_titel = Label(l_block, text="Placing directrory:")
+    l_add_extension_titel = Label(l_block, text="Add extension:")
+    l_select_titel = Label(l_block, text="Select directory:")
+    l_edit_titel = Label(l_block, text="Edit:")
+    # packing titels
+    l_name_titel.grid(column=0, row=0)
+    l_extension_titel.grid(column=1, row=0)
+    l_sort_titel.grid(column=2, row=0)
+    l_place_titel.grid(column=3, row=0)
+    l_add_extension_titel.grid(column=4, row=0)
+    l_select_titel.grid(column=5, row=0)
+    l_edit_titel.grid(column=6, row=0)
+    # columns
+    l_name = Label(l_block, bg="green", bd=10)
+    l_extension = Label(l_block, bg="blue", bd=10)
+    l_sort = Label(l_block, bg="purple", bd=10)
+    l_place = Label(l_block, bg="red", bd=10)
+    l_add_extension = Label(l_block, bg="yellow", bd=10)
+    l_select = Label(l_block, bg="pink", bd=10)
+    l_edit = Label(l_block, bg="orange", bd=10)
+    # packing columns
+    l_name.grid(column=0, row=1, sticky=N)
+    l_extension.grid(column=1, row=1, sticky=N)
+    l_sort.grid(column=2, row=1, sticky=N)
+    l_place.grid(column=3, row=1, sticky=N)
+    l_add_extension.grid(column=4, row=1, sticky=N)
+    l_select.grid(column=5, row=1, sticky=N)
+    l_edit.grid(column=6, row=1, sticky=N)
+    #
     row = 3
     for sort_dir in config['SORT_DIRECTORY']['directorys'].split(","):
         if sort_dir:
             row += 1
-            l_section = Label(l_block, text=sort_dir.upper())
-            l_text_extensions = Label(
-                l_block, text="The extesions it filters:")
+            l_section = Label(l_name, text=sort_dir.upper(), bg="green")
             l_extensions = Label(
-                l_block, text=config[sort_dir.upper()]['extensions'])
-            l_text_entry = Label(l_block, text="Extension to filter:")
-            e_extension = Entry(l_block, textvariable=e_extension)
-            b_entry = Button(
-                l_block, command=lambda sort_dir=sort_dir, e_extension=e_extension: extensions(e_extension.get().lower(), sort_dir.upper()), text="Add extension")
-            b_extension_edit = Button(
-                l_block, command=lambda sort_dir=sort_dir: extension_edit(sort_dir.upper()), text="Edit extensions")
-            b_sorting = Button(
-                l_block, command=lambda sort_dir=sort_dir: path("path_sort", sort_dir.upper()), text="Select sorting directory:")
-            b_placing = Button(
-                l_block, command=lambda sort_dir=sort_dir: path("path_place", sort_dir.upper()), text="Select placing directory:")
+                l_extension, text=config[sort_dir.upper()]['extensions'], bg="blue")
             l_path_sort = Label(
-                l_block, text=config[sort_dir.upper()]['path_sort'])
+                l_sort, text=config[sort_dir.upper()]['path_sort'], bg="purple")
             l_path_place = Label(
-                l_block, text=config[sort_dir.upper()]['path_place'])
+                l_place, text=config[sort_dir.upper()]['path_place'], bg="red")
+            e_extension = Entry(l_add_extension, textvariable=e_extension)
+            b_entry = Button(
+                l_add_extension, command=lambda sort_dir=sort_dir, e_extension=e_extension: extensions(e_extension.get().lower(), sort_dir.upper()), text="Add extension")
+            b_placing = Button(
+                l_select, command=lambda sort_dir=sort_dir: path("path_place", sort_dir.upper()), text="Placing directory")
+            b_sorting = Button(
+                l_select, command=lambda sort_dir=sort_dir: path("path_sort", sort_dir.upper()), text="Sorting directory")
+            b_extension_edit = Button(
+                l_edit, command=lambda sort_dir=sort_dir: extension_edit(sort_dir.upper()), text="Edit extensions")
             b_delete = Button(
-                l_block, command=lambda sort_dir=sort_dir: delete(sort_dir.upper()), text="Delete this")
+                l_edit, command=lambda sort_dir=sort_dir: delete(sort_dir.upper()), text="Delete this row")
             # packing
-            l_section.grid(column=count_col(), row=row)
-            l_text_extensions.grid(column=count_col(), row=row)
-            l_extensions.grid(column=count_col(), row=row)
-            l_text_entry.grid(column=count_col(), row=row)
-            e_extension.grid(column=count_col(), row=row)
+            l_section.grid(column=count_col(), row=row, padx=30, pady=9)
+            l_extensions.grid(column=count_col(), row=row, padx=30, pady=9)
+            l_path_sort.grid(column=count_col(), row=row, padx=30, pady=9)
+            l_path_place.grid(column=count_col(), row=row, padx=30, pady=9)
+            e_extension.grid(column=count_col(), row=row, padx=30, pady=10)
             b_entry.grid(column=count_col(), row=row)
-            b_extension_edit.grid(column=count_col(), row=row)
-            b_sorting.grid(column=count_col(), row=row)
-            l_path_sort.grid(column=count_col(), row=row)
-            b_placing.grid(column=count_col(), row=row)
-            l_path_place.grid(column=count_col(), row=row)
-            b_delete.grid(column=count_col(), row=row)
+            b_placing.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
+            b_sorting.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
+            b_extension_edit.grid(
+                column=count_col(), row=row, padx=20, pady=(6, 7))
+            b_delete.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
+            #
             collumn_count = 0
     # end for loop
     l_block.grid()
