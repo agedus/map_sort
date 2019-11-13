@@ -1,3 +1,4 @@
+import subprocess
 import configparser
 from tkinter import *
 from tkinter import filedialog
@@ -200,8 +201,8 @@ def blocks():
             l_path_place.grid(column=count_col(), row=row, padx=30, pady=9)
             e_extension.grid(column=count_col(), row=row, padx=30, pady=10)
             b_entry.grid(column=count_col(), row=row)
-            b_placing.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
             b_sorting.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
+            b_placing.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
             b_extension_edit.grid(
                 column=count_col(), row=row, padx=20, pady=(6, 7))
             b_delete.grid(column=count_col(), row=row, padx=20, pady=(6, 7))
@@ -239,8 +240,9 @@ b_add_sort = Button(root, command=add_sort, text="+")
 b_add_sort.grid()
 e_add = Entry(root)
 e_add.grid()
-# b_run = Button(root, command=lambda: mapsort, text="Run")
-# b_run.grid()
+b_run = Button(
+    root, command=lambda: subprocess.call("mapsort.py", shell=True), text="Run and sort your directorys")
+b_run.grid()
 
 #startup#
 
