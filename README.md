@@ -1,3 +1,4 @@
-# map_sort
-auto sort a repository
-put the mapsort.py in startup folder to auto start
+#Mapsort
+You can choose a directory to sort of extensions that you may choose.
+##Stil working on final product
+Im stil working on the some features and plan on making it a desktop app.
