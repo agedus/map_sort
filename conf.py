@@ -45,6 +45,7 @@ def add_sort():
     if not config.has_section('SORT_DIRECTORY'):
         config.add_section('SORT_DIRECTORY')
         config['SORT_DIRECTORY']['directorys'] = new_directory.lower()
+        config['SORT_DIRECTORY']['time'] = "None"
     else:
         directorys = config['SORT_DIRECTORY']['directorys'].split(",")
         if e_add.get():
@@ -123,6 +124,16 @@ def delete_extension(extension, directory):
     extension_edit(directory)
 
 
+def timer():
+    try:
+        time = int(e_time.get().replace(" ", ""))
+        if isinstance(time, int):
+            config['SORT_DIRECTORY']['time'] = str(time)
+            write()
+            timer_info()
+    except:
+        pass
+
 #GUI#
 
 # make the layout for every directory you made to sort
@@ -148,13 +159,13 @@ def blocks():
     l_select_titel = Label(l_block, text="Select directory:")
     l_edit_titel = Label(l_block, text="Edit:")
     # packing titels
-    l_name_titel.grid(column=0, row=0)
-    l_extension_titel.grid(column=1, row=0)
-    l_sort_titel.grid(column=2, row=0)
-    l_place_titel.grid(column=3, row=0)
-    l_add_extension_titel.grid(column=4, row=0)
-    l_select_titel.grid(column=5, row=0)
-    l_edit_titel.grid(column=6, row=0)
+    l_name_titel.grid(column=0, row=8)
+    l_extension_titel.grid(column=1, row=8)
+    l_sort_titel.grid(column=2, row=8)
+    l_place_titel.grid(column=3, row=8)
+    l_add_extension_titel.grid(column=4, row=8)
+    l_select_titel.grid(column=5, row=8)
+    l_edit_titel.grid(column=6, row=8)
     # columns
     l_name = Label(l_block, bg="green", bd=10)
     l_extension = Label(l_block, bg="blue", bd=10)
@@ -164,15 +175,15 @@ def blocks():
     l_select = Label(l_block, bg="pink", bd=10)
     l_edit = Label(l_block, bg="orange", bd=10)
     # packing columns
-    l_name.grid(column=0, row=1, sticky=N)
-    l_extension.grid(column=1, row=1, sticky=N)
-    l_sort.grid(column=2, row=1, sticky=N)
-    l_place.grid(column=3, row=1, sticky=N)
-    l_add_extension.grid(column=4, row=1, sticky=N)
-    l_select.grid(column=5, row=1, sticky=N)
-    l_edit.grid(column=6, row=1, sticky=N)
-    #
-    row = 3
+    l_name.grid(column=0, row=9, sticky=N)
+    l_extension.grid(column=1, row=9, sticky=N)
+    l_sort.grid(column=2, row=9, sticky=N)
+    l_place.grid(column=3, row=9, sticky=N)
+    l_add_extension.grid(column=4, row=9, sticky=N)
+    l_select.grid(column=5, row=9, sticky=N)
+    l_edit.grid(column=6, row=9, sticky=N)
+    9
+    row = 18
     for sort_dir in config['SORT_DIRECTORY']['directorys'].split(","):
         if sort_dir:
             row += 1
@@ -236,13 +247,31 @@ def extension_edit(directory):
 # make a directory
 
 
-b_add_sort = Button(root, command=add_sort, text="+")
-b_add_sort.grid()
-e_add = Entry(root)
-e_add.grid()
+def timer_info():
+    l_time_set = Label(
+        l_top_block, text=f"Current time set add: {config['SORT_DIRECTORY']['time']} Minutes")
+    l_time_set.grid(row=3, column=0)
+
+
+l_top_block = Label(root)
+l_top_block.grid(sticky=W)
+l_make = Label(l_top_block, text="make a new map to sort:")
+l_make.grid(row=1, column=0)
+b_add_sort = Button(l_top_block, command=add_sort, text="add")
+b_add_sort.grid(row=1, column=2)
+e_add = Entry(l_top_block)
+e_add.grid(row=1, column=1)
+l_timer = Label(l_top_block, text="Set sorting timer:")
+l_timer.grid(row=2, column=0)
+e_time = Entry(l_top_block)
+e_time.grid(row=2, column=1)
+l_time_m = Label(l_top_block, text="minutes")
+l_time_m.grid(row=2, column=2)
+b_time = Button(l_top_block, command=timer, text="set time")
+b_time.grid(row=2, column=3)
 b_run = Button(
-    root, command=lambda: subprocess.call("mapsort.py", shell=True), text="Run and sort your directorys")
-b_run.grid()
+    l_top_block, command=lambda: subprocess.call("mapsort.py", shell=True), text="Run and sort your directorys")
+b_run.grid(row=4)
 
 #startup#
 
@@ -251,5 +280,6 @@ if config.has_section('SORT_DIRECTORY'):
     section_check()
     write()
     blocks()
+    timer_info()
 
 mainloop()
